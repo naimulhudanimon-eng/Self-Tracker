@@ -154,6 +154,26 @@
     <button class="reset-btn" onclick="resetAll()">সব রিসেট করুন</button>
 
     <script>
+        // --- AUTO-UPDATE LOGIC ---
+        const GITHUB_RAW_URL = "https://naimulhudanimon-eng.github.io/Self-Tracker/index.html";
+        
+        async function checkForUpdate() {
+            if (navigator.onLine) {
+                try {
+                    const response = await fetch(GITHUB_RAW_URL + "?nocache=" + Date.now());
+                    const latestCode = await response.text();
+                    const currentCode = localStorage.getItem('cached_app_code');
+                    
+                    if (latestCode && latestCode.includes('Self Tracker') && latestCode !== currentCode) {
+                        localStorage.setItem('cached_app_code', latestCode);
+                        alert("নতুন আপডেট পাওয়া গেছে! অ্যাপটি রিস্টার্ট করুন।");
+                        location.reload();
+                    }
+                } catch (e) { console.log("Update check failed"); }
+            }
+        }
+        checkForUpdate();
+
         // PWA Manifest Generation
         const manifest = {
             "name": "Self Tracker",
@@ -169,7 +189,7 @@
         const manifestURL = URL.createObjectURL(blob);
         document.querySelector('#manifestPlaceholder').setAttribute('href', manifestURL);
 
-        // Service Worker for Auto-Update & Offline Use
+        // Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js').catch(err => console.log('SW failed', err));
@@ -275,5 +295,4 @@
         updateDisplay(); renderTasks();
     </script>
 </body>
-      </html>
-      
+</html>

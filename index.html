@@ -136,7 +136,7 @@
     <div class="exam-counter" id="examCounter">লোড হচ্ছে...</div>
 
     <div class="grid">
-        <div class="card" id="study" onclick="toggleTimer('study')"><h3>📚Naimul Study</h3><p id="t-study">00:00:00</p></div>
+        <div class="card" id="study" onclick="toggleTimer('study')"><h3>📚 Self Study</h3><p id="t-study">00:00:00</p></div>
         <div class="card" id="class" onclick="toggleTimer('class')"><h3>👨‍🏫 Class</h3><p id="t-class">00:00:00</p></div>
         <div class="card" id="mobile" onclick="toggleTimer('mobile')"><h3>📱 Mobile</h3><p id="t-mobile">00:00:00</p></div>
         <div class="card" id="others" onclick="toggleTimer('others')"><h3>🚫 Others</h3><p id="t-others">00:00:00</p></div>
@@ -154,25 +154,34 @@
     <button class="reset-btn" onclick="resetAll()">সব রিসেট করুন</button>
 
     <script>
-        // --- AUTO-UPDATE LOGIC ---
+        // --- শক্তিশালী অটো-আপডেট মেকানিজম (FORCE UPDATE) ---
         const GITHUB_RAW_URL = "https://naimulhudanimon-eng.github.io/Self-Tracker/index.html";
         
-        async function checkForUpdate() {
+        async function forceUpdateApp() {
             if (navigator.onLine) {
                 try {
-                    const response = await fetch(GITHUB_RAW_URL + "?nocache=" + Date.now());
+                    const response = await fetch(GITHUB_RAW_URL + "?v=" + Date.now());
                     const latestCode = await response.text();
-                    const currentCode = localStorage.getItem('cached_app_code');
-                    
+                    const currentCode = localStorage.getItem('last_synced_code');
+
                     if (latestCode && latestCode.includes('Self Tracker') && latestCode !== currentCode) {
-                        localStorage.setItem('cached_app_code', latestCode);
-                        alert("নতুন আপডেট পাওয়া গেছে! অ্যাপটি রিস্টার্ট করুন।");
-                        location.reload();
+                        localStorage.setItem('last_synced_code', latestCode);
+                        
+                        // ক্যাশ এবং সার্ভিস ওয়ার্কার ক্লিয়ার করা
+                        if ('serviceWorker' in navigator) {
+                            const regs = await navigator.serviceWorker.getRegistrations();
+                            for (let r of regs) await r.unregister();
+                        }
+                        const cacheKeys = await caches.keys();
+                        for (let k of cacheKeys) await caches.delete(k);
+
+                        alert("অ্যাপ আপডেট হয়েছে! নতুন পরিবর্তন দেখতে ওকে (OK) দিন।");
+                        location.reload(true);
                     }
                 } catch (e) { console.log("Update check failed"); }
             }
         }
-        checkForUpdate();
+        setTimeout(forceUpdateApp, 3000); // অ্যাপ চালুর ৩ সেকেন্ড পর চেক করবে
 
         // PWA Manifest Generation
         const manifest = {
@@ -296,3 +305,4 @@
     </script>
 </body>
 </html>
+

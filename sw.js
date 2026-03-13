@@ -1,4 +1,4 @@
-const CACHE_NAME = "selftracker-v2";
+const CACHE_NAME = "selftracker-v1";
 
 self.addEventListener("install", event => {
 

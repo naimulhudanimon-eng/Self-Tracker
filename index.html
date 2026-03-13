@@ -354,40 +354,17 @@
     <script>
 if ('serviceWorker' in navigator) {
 
-window.addEventListener('load', () => {
+navigator.serviceWorker.register('./sw.js').then(reg => {
 
-navigator.serviceWorker.register('./sw.js')
+console.log("SW Registered");
 
-.then(reg => {
-
-console.log("Service Worker Registered");
-
-function checkUpdate(){
+// Silent auto update
+setInterval(() => {
 reg.update();
-}
+}, 60000);
 
-setInterval(checkUpdate, 300000); // প্রতি ৫ মিনিটে update check
-
-reg.addEventListener('updatefound', () => {
-
-const newWorker = reg.installing;
-
-newWorker.addEventListener('statechange', () => {
-
-if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-
-if(confirm("নতুন আপডেট এসেছে। Update করবেন?")){
-
+navigator.serviceWorker.addEventListener('controllerchange', () => {
 window.location.reload();
-
-}
-
-}
-
-});
-
-});
-
 });
 
 });

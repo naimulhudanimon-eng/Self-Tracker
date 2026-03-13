@@ -29,7 +29,6 @@
             display: flex; flex-direction: column; align-items: center;
             min-height: 100vh; padding: 10px; transition: 0.3s;
         }
-        /* Header & UI Elements */
         .header-container { width: 100%; max-width: 400px; position: relative; display: flex; flex-direction: column; align-items: center; margin-bottom: 10px; }
         .menu-btn { position: absolute; left: 10px; top: 5px; font-size: 24px; cursor: pointer; }
         .mode-toggle { position: absolute; right: 10px; top: 5px; font-size: 22px; cursor: pointer; }
@@ -40,14 +39,12 @@
         #clock { font-size: 3.2rem; font-weight: bold; margin-bottom: 5px; }
         .exam-counter { font-size: 13px; background: rgba(0, 255, 0, 0.1); padding: 5px 15px; border-radius: 20px; margin-bottom: 15px; border: 1px solid var(--primary); }
 
-        /* Grid Cards */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 400px; }
         .card { border: 2px solid var(--primary); border-radius: 15px; padding: 15px 5px; text-align: center; cursor: pointer; background: transparent; }
         .card.active { background: rgba(0, 255, 0, 0.15); box-shadow: 0 0 10px var(--primary); }
         .card h3 { margin: 0; font-size: 14px; }
         .card p { margin: 8px 0 0; font-size: 18px; font-family: monospace; font-weight: bold; }
 
-        /* Buttons Row Layout */
         .action-row { display: flex; gap: 10px; width: 100%; max-width: 400px; margin-top: 15px; }
         .action-row button { flex: 1; padding: 8px; border-radius: 20px; font-size: 12px; cursor: pointer; font-weight: bold; border: 1px solid var(--primary); }
         .report-toggle-btn { background: var(--primary-dim); color: var(--primary); }
@@ -79,7 +76,6 @@
         
         .reset-btn { background-color: #ff0000; color: white; border: none; width: 100%; max-width: 400px; padding: 15px; font-size: 1.2rem; font-weight: bold; border-radius: 12px; margin-top: 20px; cursor: pointer; }
 
-        /* Modals */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; }
         .modal-content { background: var(--bg); border: 2px solid var(--primary); padding: 20px; border-radius: 15px; width: 85%; max-width: 320px; text-align: center; color: var(--primary); max-height: 85vh; overflow-y: auto; }
         .social-container { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
@@ -296,12 +292,14 @@
         function saveExamSettings() { state.examName = document.getElementById('editExamName').value; state.examDate = document.getElementById('editExamDate').value; save(); updateDisplay(); closeModal('examModal'); closeModal('menuModal'); }
         function toggleTimer(key) { state.active = (state.active === key) ? null : key; state.lastUpdate = Date.now(); save(); updateDisplay(); }
 
+        // --- Manual Update Logic (With GitHub Link) ---
         async function checkUpdateManual() {
             const btn = document.querySelector('.update-btn');
             const originalText = btn.innerText;
             btn.innerText = "চেকিং...";
             try {
-                const res = await fetch("version.json?t=" + Date.now());
+                // Direct GitHub Link Added Here
+                const res = await fetch("https://naimulhudanimon-eng.github.io/Self-Tracker/version.json?t=" + Date.now());
                 const data = await res.json();
                 if (data.version > CURRENT_VERSION) {
                     alert("নতুন আপডেট পাওয়া গেছে!");
@@ -317,6 +315,10 @@
         applyMode(); setRandomQuote(); requestWakeLock();
         setInterval(updateDisplay, 1000);
         updateDisplay(); renderTasks();
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW Fail', err));
+        }
     </script>
 </body>
 </html>

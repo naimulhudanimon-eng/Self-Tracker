@@ -29,6 +29,7 @@
             display: flex; flex-direction: column; align-items: center;
             min-height: 100vh; padding: 10px; transition: 0.3s;
         }
+        /* Header & UI Elements */
         .header-container { width: 100%; max-width: 400px; position: relative; display: flex; flex-direction: column; align-items: center; margin-bottom: 10px; }
         .menu-btn { position: absolute; left: 10px; top: 5px; font-size: 24px; cursor: pointer; }
         .mode-toggle { position: absolute; right: 10px; top: 5px; font-size: 22px; cursor: pointer; }
@@ -39,17 +40,15 @@
         #clock { font-size: 3.2rem; font-weight: bold; margin-bottom: 5px; }
         .exam-counter { font-size: 13px; background: rgba(0, 255, 0, 0.1); padding: 5px 15px; border-radius: 20px; margin-bottom: 15px; border: 1px solid var(--primary); }
 
+        /* Grid Cards */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 400px; }
         .card { border: 2px solid var(--primary); border-radius: 15px; padding: 15px 5px; text-align: center; cursor: pointer; background: transparent; }
         .card.active { background: rgba(0, 255, 0, 0.15); box-shadow: 0 0 10px var(--primary); }
         .card h3 { margin: 0; font-size: 14px; }
         .card p { margin: 8px 0 0; font-size: 18px; font-family: monospace; font-weight: bold; }
 
-        .action-row { display: flex; gap: 10px; width: 100%; max-width: 400px; margin-top: 15px; }
-        .action-row button { flex: 1; padding: 8px; border-radius: 20px; font-size: 12px; cursor: pointer; font-weight: bold; border: 1px solid var(--primary); }
-        .report-toggle-btn { background: var(--primary-dim); color: var(--primary); }
-        .update-btn { background: #0088ff; color: white; border-color: #0088ff; }
-
+        /* --- Weekly Report Button & Section --- */
+        .report-toggle-btn { margin-top: 15px; background: var(--primary-dim); color: var(--primary); border: 1px solid var(--primary); padding: 5px 15px; border-radius: 20px; font-size: 12px; cursor: pointer; font-weight: bold; }
         .report-section { display: none; width: 100%; max-width: 400px; margin-top: 10px; border: 1px solid var(--primary-dim); border-radius: 15px; padding: 12px; box-sizing: border-box; }
         .report-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--primary-dim); padding-bottom: 5px; }
         .report-header h2 { font-size: 14px; margin: 0; }
@@ -63,6 +62,7 @@
         .bar-label { font-size: 9px; margin-top: 5px; color: var(--primary); font-weight: bold; }
         #statsSummary { font-size: 11px; opacity: 0.7; text-align: center; margin-top: 5px; }
 
+        /* Task Section */
         .task-section { width: 100%; max-width: 400px; margin-top: 20px; }
         .task-section h2 { font-size: 18px; margin-bottom: 10px; border-bottom: 1px solid var(--primary); display: inline-block; }
         .task-input-group { display: flex; gap: 5px; margin-bottom: 10px; }
@@ -73,18 +73,34 @@
         .task-item.done { opacity: 0.4; text-decoration: line-through; }
         .task-text { flex: 1; font-size: 14px; margin-left: 10px; text-align: left; }
         .del-task { color: #ff0000; font-weight: bold; cursor: pointer; padding: 0 5px; }
-        
         .reset-btn { background-color: #ff0000; color: white; border: none; width: 100%; max-width: 400px; padding: 15px; font-size: 1.2rem; font-weight: bold; border-radius: 12px; margin-top: 20px; cursor: pointer; }
 
+        /* Modals */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; }
         .modal-content { background: var(--bg); border: 2px solid var(--primary); padding: 20px; border-radius: 15px; width: 85%; max-width: 320px; text-align: center; color: var(--primary); max-height: 85vh; overflow-y: auto; }
         .social-container { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
         .social-link { display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 14px; color: white; }
         .modal-btn { padding: 10px 20px; background: var(--primary); color: #000; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; }
         .modal-content input { width: 90%; padding: 8px; margin: 10px 0; border: 1px solid var(--primary); background: transparent; color: var(--primary); border-radius: 5px; }
+
+        /* Custom Reset Modal specific buttons */
+        .confirm-btns { display: flex; gap: 10px; margin-top: 15px; }
+        .btn-ok { background: #ff0000 !important; color: white !important; }
+        .btn-cancel { background: #444 !important; color: white !important; }
     </style>
 </head>
 <body id="mainBody">
+
+    <div id="resetModal" class="modal">
+        <div class="modal-content">
+            <h3>রিসেট কনফার্মেশন</h3>
+            <p style="font-size: 14px;">আপনি কি নিশ্চিত যে সবকিছু রিসেট করতে চান? আপনার আজকের সমস্ত ডাটা মুছে যাবে!</p>
+            <div class="confirm-btns">
+                <button class="modal-btn btn-ok" onclick="confirmReset()">ঠিক আছে</button>
+                <button class="modal-btn btn-cancel" onclick="closeModal('resetModal')">বাতিল</button>
+            </div>
+        </div>
+    </div>
 
     <div id="menuModal" class="modal" onclick="closeModal('menuModal')">
         <div class="modal-content" onclick="event.stopPropagation()">
@@ -133,17 +149,13 @@
     <div class="exam-counter" id="examCounter">লোড হচ্ছে...</div>
 
     <div class="grid">
-        <div class="card" id="study" onclick="toggleTimer('study')"><h3>📚 Selfn</h3><p id="t-study">00:00:00</p></div>
+        <div class="card" id="study" onclick="toggleTimer('study')"><h3>📚 Self Study</h3><p id="t-study">00:00:00</p></div>
         <div class="card" id="class" onclick="toggleTimer('class')"><h3>👨‍🏫 Class</h3><p id="t-class">00:00:00</p></div>
         <div class="card" id="mobile" onclick="toggleTimer('mobile')"><h3>📱 Mobile</h3><p id="t-mobile">00:00:00</p></div>
         <div class="card" id="others" onclick="toggleTimer('others')"><h3>🚫 Others</h3><p id="t-others">00:00:00</p></div>
     </div>
 
-    <div class="action-row">
-        <button class="report-toggle-btn" onclick="toggleReport()">📊 Weekly Report</button>
-        <button class="update-btn" onclick="checkUpdateManual()">🚀 Update Check</button>
-    </div>
-
+    <button class="report-toggle-btn" onclick="toggleReport()">📊 Weekly Report</button>
     <div class="report-section" id="reportSection">
         <div class="report-header">
             <h2>📊 Weekly Report</h2>
@@ -165,11 +177,9 @@
         <div id="taskList"></div>
     </div>
 
-    <button class="reset-btn" onclick="resetAll()">সব রিসেট করুন</button>
+    <button class="reset-btn" onclick="openModal('resetModal')">সব রিসেট করুন</button>
 
     <script>
-        const CURRENT_VERSION = 2;
-
         let state = JSON.parse(localStorage.getItem('naimul_pwa_v1')) || {
             active: null,
             times: { study: 0, class: 0, mobile: 0, others: 0 },
@@ -181,20 +191,38 @@
             weeklyHistory: {}
         };
 
-        const quotes = ["পড়াশোনা হলো ভবিষ্যতের পাসপোর্ট।", "সফলতার কোনো শর্টকাট নেই।", "আজকের পরিশ্রম আগামীকালের সাফল্য।", "নিজেকে নিজের সাথে তুলনা করো।", "শিক্ষা সবচেয়ে শক্তিশালী অস্ত্র।", "থেমে যেও না।", "প্রতিটি ছোট পদক্ষেপ গুরুত্বপূর্ণ।"];
+        const quotes = [
+            "পড়াশোনা হলো ভবিষ্যতের পাসপোর্ট।",
+            "সফলতার কোনো শর্টকাট নেই, কঠোর পরিশ্রমই একমাত্র পথ।",
+            "আজকের পরিশ্রম আগামীকালের সাফল্যের ভিত্তি।",
+            "নিজেকে অন্যের সাথে নয়, নিজের গতকালের সাথে তুলনা করো।",
+            "শিক্ষা হলো সবচেয়ে শক্তিশালী অস্ত্র যা দিয়ে পৃথিবী পরিবর্তন করা যায়।",
+            "থেমে যেও না, লক্ষ্য পূরণ না হওয়া পর্যন্ত লড়াই করো।",
+            "প্রতিটি ছোট পদক্ষেপ তোমাকে বড় সাফল্যের দিকে নিয়ে যাবে।"
+        ];
 
         function setRandomQuote() {
-            document.getElementById('dailyQuote').innerText = quotes[Math.floor(Math.random() * quotes.length)];
+            const index = Math.floor(Math.random() * quotes.length);
+            document.getElementById('dailyQuote').innerText = quotes[index];
         }
 
         let wakeLock = null;
         async function requestWakeLock() {
-            if ('wakeLock' in navigator) { try { wakeLock = await navigator.wakeLock.request('screen'); } catch (err) {} }
+            try {
+                if ('wakeLock' in navigator) {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                }
+            } catch (err) { console.log("WakeLock error: " + err.message); }
         }
 
         function applyMode() {
-            document.body.classList.toggle('light-mode', state.isLightMode);
-            document.getElementById('mode-icon').innerText = state.isLightMode ? '☀️' : '🌙';
+            if (state.isLightMode) {
+                document.body.classList.add('light-mode');
+                document.getElementById('mode-icon').innerText = '☀️';
+            } else {
+                document.body.classList.remove('light-mode');
+                document.getElementById('mode-icon').innerText = '🌙';
+            }
         }
 
         function save() { localStorage.setItem('naimul_pwa_v1', JSON.stringify(state)); }
@@ -231,50 +259,79 @@
             return `${hr}:${mn}:${sc}`;
         }
 
-        function resetAll() {
-            if(!confirm("রিসেট করবেন?")) return;
+        // Updated Reset Function to call the Custom Modal Action
+        function confirmReset() {
             const studyHours = (state.times.study + state.times.class) / 3600;
             const d = new Date();
             const dateKey = d.getFullYear() + '-' + (d.getMonth() + 1).toString().padStart(2, '0') + '-' + d.getDate().toString().padStart(2, '0');
             state.weeklyHistory[dateKey] = (state.weeklyHistory[dateKey] || 0) + studyHours;
+
+            alert(`আজকের রিপোর্ট:\n📚 পড়া: ${formatTime(state.times.study + state.times.class)}\n📱 মোবাইল: ${formatTime(state.times.mobile)}`);
             state.active = null;
             state.times = { study: 0, class: 0, mobile: 0, others: 0 };
             state.tasks = [];
             state.lastUpdate = Date.now();
             save(); updateDisplay(); renderTasks(); renderChart();
+            closeModal('resetModal');
         }
 
         function toggleReport() {
             const section = document.getElementById('reportSection');
-            section.style.display = (section.style.display === "block") ? "none" : "block";
-            if(section.style.display === "block") renderChart();
+            if (section.style.display === "block") {
+                section.style.display = "none";
+            } else {
+                section.style.display = "block";
+                renderChart();
+            }
         }
 
         function renderChart() {
-            const chart = document.getElementById('chart'); chart.innerHTML = "";
+            const chart = document.getElementById('chart'); 
+            chart.innerHTML = "";
             const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            let total = 0; const last7 = [];
+            let total = 0; 
+            const last7 = [];
+
             for(let i=6; i>=0; i--) {
                 const d = new Date(); d.setDate(d.getDate() - i);
                 const k = d.getFullYear() + '-' + (d.getMonth() + 1).toString().padStart(2, '0') + '-' + d.getDate().toString().padStart(2, '0');
                 const h = state.weeklyHistory[k] || 0;
-                last7.push({ dayLabel: dayNames[d.getDay()], hours: h, fullDate: d.toLocaleDateString('bn-BD', { day: 'numeric', month: 'long' }) });
+                last7.push({ 
+                    dayLabel: dayNames[d.getDay()], 
+                    hours: h, 
+                    fullDate: d.toLocaleDateString('bn-BD', { day: 'numeric', month: 'long' })
+                });
                 total += h;
             }
+
             const max = Math.max(...last7.map(d => d.hours), 5);
+
             last7.forEach((day, index) => {
+                const hVal = (day.hours / max) * 100;
                 const group = document.createElement('div');
-                group.className = 'bar-group' + (index === 6 ? ' active-bar' : '');
-                group.innerHTML = `<div class="bar" style="height: ${(day.hours / max) * 100}%;"></div><div class="bar-label">${day.dayLabel}</div>`;
-                group.onclick = () => { document.querySelectorAll('.bar-group').forEach(el => el.classList.remove('active-bar')); group.classList.add('active-bar'); updateChartDisplay(day.hours, day.fullDate); };
+                group.className = 'bar-group';
+                if(index === 6) group.classList.add('active-bar');
+
+                group.innerHTML = `
+                    <div class="bar" style="height: ${hVal}%;"></div>
+                    <div class="bar-label">${day.dayLabel}</div>
+                `;
+
+                group.onclick = () => {
+                    document.querySelectorAll('.bar-group').forEach(el => el.classList.remove('active-bar'));
+                    group.classList.add('active-bar');
+                    updateChartDisplay(day.hours, day.fullDate);
+                };
                 chart.appendChild(group);
             });
+
             updateChartDisplay(last7[6].hours, last7[6].fullDate);
             document.getElementById('statsSummary').innerHTML = `গত ৭ দিনে মোট: <b>${total.toFixed(1)} ঘণ্টা</b>`;
         }
 
         function updateChartDisplay(hours, dateStr) {
-            const h = Math.floor(hours), m = Math.round((hours - h) * 60);
+            const h = Math.floor(hours);
+            const m = Math.round((hours - h) * 60);
             document.getElementById('chartTime').innerText = `${h} hr, ${m} min`;
             document.getElementById('chartDate').innerText = dateStr;
         }
@@ -287,38 +344,26 @@
         function deleteTask(i) { state.tasks.splice(i, 1); save(); renderTasks(); }
         function renderTasks() {
             const l = document.getElementById('taskList'); l.innerHTML = "";
-            state.tasks.forEach((t, i) => { l.innerHTML += `<div class="task-item ${t.done?'done':''}"><input type="checkbox" ${t.done?'checked':''} onclick="toggleTask(${i})"><div class="task-text">${t.text}</div><div class="del-task" onclick="deleteTask(${i})">✖</div></div>`; });
+            state.tasks.forEach((t, i) => {
+                l.innerHTML += `<div class="task-item ${t.done?'done':''}"><input type="checkbox" ${t.done?'checked':''} onclick="toggleTask(${i})"><div class="task-text">${t.text}</div><div class="del-task" onclick="deleteTask(${i})">✖</div></div>`;
+            });
         }
         function saveExamSettings() { state.examName = document.getElementById('editExamName').value; state.examDate = document.getElementById('editExamDate').value; save(); updateDisplay(); closeModal('examModal'); closeModal('menuModal'); }
         function toggleTimer(key) { state.active = (state.active === key) ? null : key; state.lastUpdate = Date.now(); save(); updateDisplay(); }
 
-        // --- Manual Update Logic (With GitHub Link) ---
-        async function checkUpdateManual() {
-            const btn = document.querySelector('.update-btn');
-            const originalText = btn.innerText;
-            btn.innerText = "চেকিং...";
-            try {
-                // Direct GitHub Link Added Here
-                const res = await fetch("https://naimulhudanimon-eng.github.io/Self-Tracker/version.json?t=" + Date.now());
-                const data = await res.json();
-                if (data.version > CURRENT_VERSION) {
-                    alert("নতুন আপডেট পাওয়া গেছে!");
-                    if ('serviceWorker' in navigator) {
-                        const regs = await navigator.serviceWorker.getRegistrations();
-                        for (let reg of regs) { await reg.unregister(); }
-                    }
-                    location.reload(true);
-                } else { alert("লেটেস্ট ভার্সন ব্যবহার করছেন।"); btn.innerText = originalText; }
-            } catch (e) { alert("আপডেট চেক ব্যর্থ!"); btn.innerText = originalText; }
-        }
+        applyMode();
+        setRandomQuote();
+        requestWakeLock();
 
-        applyMode(); setRandomQuote(); requestWakeLock();
+        document.addEventListener('visibilitychange', async () => {
+            if (wakeLock !== null && document.visibilityState === 'visible') {
+                requestWakeLock();
+            }
+        });
+
         setInterval(updateDisplay, 1000);
-        updateDisplay(); renderTasks();
-
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW Fail', err));
-        }
+        updateDisplay(); 
+        renderTasks();
     </script>
 </body>
 </html>

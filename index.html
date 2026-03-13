@@ -351,25 +351,24 @@
         updateDisplay(); 
         renderTasks();
     </script>
-    <script>
-if ('serviceWorker' in navigator) {
+  <script>
+    // Versioning system for update detection
+    const CURRENT_VERSION = 1;  // এটা আপডেটের সময় বাড়াবেন
 
-navigator.serviceWorker.register('./sw.js').then(reg => {
+    async function checkUpdate() {
+        try {
+            const res = await fetch("version.json?t=" + Date.now());
+            const data = await res.json();
+            if (data.version > CURRENT_VERSION) {
+                console.log("নতুন version পাওয়া গেছে, রিফ্রেশ হচ্ছে...");
+                location.reload(true);
+            }
+        } catch (e) {
+            console.log("Offline / version check fail", e);
+        }
+    }
 
-console.log("SW Registered");
-
-// Silent auto update
-setInterval(() => {
-reg.update();
-}, 60000);
-
-navigator.serviceWorker.addEventListener('controllerchange', () => {
-window.location.reload();
-});
-
-});
-
-}
-    </script>
+    setInterval(checkUpdate, 30000); // প্রতি ৩০ সেকেন্ডে চেক করবে
+  </script>
     </body>
 </html>
